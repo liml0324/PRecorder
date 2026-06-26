@@ -69,6 +69,13 @@ public partial class App : System.Windows.Application
         Shutdown();
     }
 
+    /// <summary>弹出托盘气泡提示</summary>
+    public void ShowBalloonTip(string title, string text)
+    {
+        _trayIcon?.ShowBalloonTip(3000, title, text,
+            System.Windows.Forms.ToolTipIcon.Info);
+    }
+
     /// <summary>程序化生成托盘图标（蓝色圆形）</summary>
     private static System.Drawing.Icon CreateTrayIcon(System.Drawing.Color color)
     {

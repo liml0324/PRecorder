@@ -51,14 +51,24 @@ public partial class MainWindow : System.Windows.Window
         _statusTimer.Start();
     }
 
-    /// <summary>窗口关闭 → 隐藏到托盘，而非退出</summary>
+    /// <summary>窗口关闭 → 隐藏到托盘，并弹出气泡提示</summary>
     private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
     {
         if (!_isExiting)
         {
             e.Cancel = true;
             Hide();
+
+            // 显示气泡提示，告知用户程序仍在托盘运行
+            ShowTrayBalloon("PRecorder 已最小化到系统托盘", "双击托盘图标可重新打开，右键可退出程序。");
         }
+    }
+
+    /// <summary>在系统托盘弹出气泡提示</summary>
+    private static void ShowTrayBalloon(string title, string text)
+    {
+        var app = System.Windows.Application.Current as App;
+        app?.ShowBalloonTip(title, text);
     }
 
     // ==================== FFmpeg 检测 ====================
