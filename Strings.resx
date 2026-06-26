@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+
+  <!-- MainWindow -->
+  <data name="WindowTitle" xml:space="preserve"><value>PRecorder</value></data>
+  <data name="DeviceLabel" xml:space="preserve"><value>输入设备:</value></data>
+  <data name="RefreshDevices" xml:space="preserve"><value>刷新设备</value></data>
+  <data name="StatusIdle" xml:space="preserve"><value>未开始录音</value></data>
+  <data name="StatusRecording" xml:space="preserve"><value>录音中</value></data>
+  <data name="StatusStopped" xml:space="preserve"><value>已停止</value></data>
+  <data name="DurationLabel" xml:space="preserve"><value>已录制:</value></data>
+  <data name="DurationEmpty" xml:space="preserve"><value>已录制: --:--:--</value></data>
+  <data name="BufferLabel" xml:space="preserve"><value>缓冲区:</value></data>
+  <data name="BufferEmpty" xml:space="preserve"><value>缓冲区: 空</value></data>
+  <data name="BufferRecent" xml:space="preserve"><value>缓冲区: {0} (最近 {1} 分钟)</value></data>
+  <data name="BufferRecentShort" xml:space="preserve"><value>缓冲区: {0}</value></data>
+  <data name="BtnStart" xml:space="preserve"><value>▶  开始录音</value></data>
+  <data name="BtnStop" xml:space="preserve"><value>⏹  停止录音</value></data>
+  <data name="BtnSave" xml:space="preserve"><value>💾  保存</value></data>
+  <data name="BtnSettings" xml:space="preserve"><value>⚙  设置</value></data>
+  <data name="BtnExit" xml:space="preserve"><value>退出</value></data>
+  <data name="StatusReady" xml:space="preserve"><value>就绪</value></data>
+  <data name="LastSaved" xml:space="preserve"><value>上次保存: {0}</value></data>
+  <data name="Exporting" xml:space="preserve"><value>正在导出音频...</value></data>
+
+  <!-- SettingsWindow -->
+  <data name="SettingsTitle" xml:space="preserve"><value>设置</value></data>
+  <data name="SavePathLabel" xml:space="preserve"><value>音频保存路径:</value></data>
+  <data name="BrowseBtn" xml:space="preserve"><value>浏览...</value></data>
+  <data name="FormatLabel" xml:space="preserve"><value>保存格式:</value></data>
+  <data name="BufferDurationLabel" xml:space="preserve"><value>循环缓冲区长度（分钟）:</value></data>
+  <data name="CloseBehaviorLabel" xml:space="preserve"><value>关闭窗口时:</value></data>
+  <data name="MinimizeToTray" xml:space="preserve"><value>最小化到系统托盘</value></data>
+  <data name="ExitDirectly" xml:space="preserve"><value>直接退出程序</value></data>
+  <data name="LanguageLabel" xml:space="preserve"><value>语言 / Language:</value></data>
+  <data name="BtnCancel" xml:space="preserve"><value>取消</value></data>
+  <data name="BtnSaveSettings" xml:space="preserve"><value>保存</value></data>
+
+  <!-- Buffer duration options -->
+  <data name="Duration1Min" xml:space="preserve"><value>1 分钟</value></data>
+  <data name="Duration2Min" xml:space="preserve"><value>2 分钟</value></data>
+  <data name="Duration3Min" xml:space="preserve"><value>3 分钟</value></data>
+  <data name="Duration5Min" xml:space="preserve"><value>5 分钟（默认）</value></data>
+  <data name="Duration10Min" xml:space="preserve"><value>10 分钟</value></data>
+  <data name="Duration15Min" xml:space="preserve"><value>15 分钟</value></data>
+  <data name="Duration30Min" xml:space="preserve"><value>30 分钟</value></data>
+  <data name="Duration60Min" xml:space="preserve"><value>60 分钟</value></data>
+
+  <!-- Format options -->
+  <data name="FormatWav" xml:space="preserve"><value>WAV (无损)</value></data>
+  <data name="FormatMp3" xml:space="preserve"><value>MP3 (320 kbps)</value></data>
+  <data name="FormatFlac" xml:space="preserve"><value>FLAC (无损压缩)</value></data>
+  <data name="FormatAac" xml:space="preserve"><value>AAC (256 kbps)</value></data>
+  <data name="FormatOgg" xml:space="preserve"><value>OGG Vorbis</value></data>
+  <data name="FormatNoFfmpeg" xml:space="preserve"><value>{0} (FFmpeg 未安装)</value></data>
+
+  <!-- Tray -->
+  <data name="TrayText" xml:space="preserve"><value>PRecorder — 录音中</value></data>
+  <data name="TrayShow" xml:space="preserve"><value>显示主窗口</value></data>
+  <data name="TraySave" xml:space="preserve"><value>保存最近 5 分钟</value></data>
+  <data name="TrayExit" xml:space="preserve"><value>退出程序</value></data>
+  <data name="TrayBalloonTitle" xml:space="preserve"><value>PRecorder 已最小化到系统托盘</value></data>
+  <data name="TrayBalloonText" xml:space="preserve"><value>双击托盘图标可重新打开，右键可退出程序。</value></data>
+  <data name="CtrlCStop" xml:space="preserve"><value>检测到 Ctrl+C，正在停止录音...</value></data>
+  <data name="CtrlCStopped" xml:space="preserve"><value>录音已停止。</value></data>
+
+  <!-- Messages -->
+  <data name="MsgSelectDevice" xml:space="preserve"><value>请先选择输入设备。</value></data>
+  <data name="MsgTitle" xml:space="preserve"><value>提示</value></data>
+  <data name="MsgError" xml:space="preserve"><value>错误</value></data>
+  <data name="MsgStartFailed" xml:space="preserve"><value>启动录音失败:\n{0}</value></data>
+  <data name="MsgNotRecording" xml:space="preserve"><value>当前没有在录音。</value></data>
+  <data name="MsgBufferEmpty" xml:space="preserve"><value>保存失败：缓冲区内目前没有音频数据！</value></data>
+  <data name="MsgNoFfmpeg" xml:space="preserve"><value>未检测到 FFmpeg，无法保存为非 WAV 格式。\n\n请安装 FFmpeg 后重试，或将格式改为 WAV。\n下载地址: https://ffmpeg.org/download.html</value></data>
+  <data name="MsgFfmpegTitle" xml:space="preserve"><value>FFmpeg 不可用</value></data>
+  <data name="MsgSaveSuccess" xml:space="preserve"><value>【成功】音频已保存至: {0}</value></data>
+  <data name="MsgSaveError" xml:space="preserve"><value>【失败】保存音频时出错: {0}</value></data>
+  <data name="MsgAudioWarning" xml:space="preserve"><value>[录音警告] 数据处理异常: {0}</value></data>
+  <data name="MsgRestartNeeded" xml:space="preserve"><value>语言更改将在下次启动时生效。</value></data>
+</root>

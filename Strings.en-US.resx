@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+
+  <data name="WindowTitle" xml:space="preserve"><value>PRecorder</value></data>
+  <data name="DeviceLabel" xml:space="preserve"><value>Input Device:</value></data>
+  <data name="RefreshDevices" xml:space="preserve"><value>Refresh</value></data>
+  <data name="StatusIdle" xml:space="preserve"><value>Not Recording</value></data>
+  <data name="StatusRecording" xml:space="preserve"><value>Recording</value></data>
+  <data name="StatusStopped" xml:space="preserve"><value>Stopped</value></data>
+  <data name="DurationLabel" xml:space="preserve"><value>Recorded:</value></data>
+  <data name="DurationEmpty" xml:space="preserve"><value>Recorded: --:--:--</value></data>
+  <data name="BufferLabel" xml:space="preserve"><value>Buffer:</value></data>
+  <data name="BufferEmpty" xml:space="preserve"><value>Buffer: empty</value></data>
+  <data name="BufferRecent" xml:space="preserve"><value>Buffer: {0} (last {1} min)</value></data>
+  <data name="BufferRecentShort" xml:space="preserve"><value>Buffer: {0}</value></data>
+  <data name="BtnStart" xml:space="preserve"><value>▶  Start</value></data>
+  <data name="BtnStop" xml:space="preserve"><value>⏹  Stop</value></data>
+  <data name="BtnSave" xml:space="preserve"><value>💾  Save</value></data>
+  <data name="BtnSettings" xml:space="preserve"><value>⚙  Settings</value></data>
+  <data name="BtnExit" xml:space="preserve"><value>Exit</value></data>
+  <data name="StatusReady" xml:space="preserve"><value>Ready</value></data>
+  <data name="LastSaved" xml:space="preserve"><value>Last saved: {0}</value></data>
+  <data name="Exporting" xml:space="preserve"><value>Exporting audio...</value></data>
+
+  <data name="SettingsTitle" xml:space="preserve"><value>Settings</value></data>
+  <data name="SavePathLabel" xml:space="preserve"><value>Save Path:</value></data>
+  <data name="BrowseBtn" xml:space="preserve"><value>Browse...</value></data>
+  <data name="FormatLabel" xml:space="preserve"><value>Format:</value></data>
+  <data name="BufferDurationLabel" xml:space="preserve"><value>Buffer Duration (minutes):</value></data>
+  <data name="CloseBehaviorLabel" xml:space="preserve"><value>When closing window:</value></data>
+  <data name="MinimizeToTray" xml:space="preserve"><value>Minimize to system tray</value></data>
+  <data name="ExitDirectly" xml:space="preserve"><value>Exit application</value></data>
+  <data name="LanguageLabel" xml:space="preserve"><value>Language:</value></data>
+  <data name="BtnCancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="BtnSaveSettings" xml:space="preserve"><value>Save</value></data>
+
+  <data name="Duration1Min" xml:space="preserve"><value>1 minute</value></data>
+  <data name="Duration2Min" xml:space="preserve"><value>2 minutes</value></data>
+  <data name="Duration3Min" xml:space="preserve"><value>3 minutes</value></data>
+  <data name="Duration5Min" xml:space="preserve"><value>5 minutes (default)</value></data>
+  <data name="Duration10Min" xml:space="preserve"><value>10 minutes</value></data>
+  <data name="Duration15Min" xml:space="preserve"><value>15 minutes</value></data>
+  <data name="Duration30Min" xml:space="preserve"><value>30 minutes</value></data>
+  <data name="Duration60Min" xml:space="preserve"><value>60 minutes</value></data>
+
+  <data name="FormatWav" xml:space="preserve"><value>WAV (lossless)</value></data>
+  <data name="FormatMp3" xml:space="preserve"><value>MP3 (320 kbps)</value></data>
+  <data name="FormatFlac" xml:space="preserve"><value>FLAC (lossless)</value></data>
+  <data name="FormatAac" xml:space="preserve"><value>AAC (256 kbps)</value></data>
+  <data name="FormatOgg" xml:space="preserve"><value>OGG Vorbis</value></data>
+  <data name="FormatNoFfmpeg" xml:space="preserve"><value>{0} (FFmpeg not installed)</value></data>
+
+  <data name="TrayText" xml:space="preserve"><value>PRecorder — Recording</value></data>
+  <data name="TrayShow" xml:space="preserve"><value>Show Window</value></data>
+  <data name="TraySave" xml:space="preserve"><value>Save Last 5 Minutes</value></data>
+  <data name="TrayExit" xml:space="preserve"><value>Exit</value></data>
+  <data name="TrayBalloonTitle" xml:space="preserve"><value>PRecorder minimized to tray</value></data>
+  <data name="TrayBalloonText" xml:space="preserve"><value>Double-click tray icon to restore, right-click to exit.</value></data>
+  <data name="CtrlCStop" xml:space="preserve"><value>Ctrl+C detected, stopping...</value></data>
+  <data name="CtrlCStopped" xml:space="preserve"><value>Recording stopped.</value></data>
+
+  <data name="MsgSelectDevice" xml:space="preserve"><value>Please select an input device.</value></data>
+  <data name="MsgTitle" xml:space="preserve"><value>Info</value></data>
+  <data name="MsgError" xml:space="preserve"><value>Error</value></data>
+  <data name="MsgStartFailed" xml:space="preserve"><value>Failed to start recording:\n{0}</value></data>
+  <data name="MsgNotRecording" xml:space="preserve"><value>Not currently recording.</value></data>
+  <data name="MsgBufferEmpty" xml:space="preserve"><value>Save failed: no audio data in buffer.</value></data>
+  <data name="MsgNoFfmpeg" xml:space="preserve"><value>FFmpeg not detected. Cannot save in non-WAV format.\n\nPlease install FFmpeg or switch to WAV format.\nDownload: https://ffmpeg.org/download.html</value></data>
+  <data name="MsgFfmpegTitle" xml:space="preserve"><value>FFmpeg Unavailable</value></data>
+  <data name="MsgSaveSuccess" xml:space="preserve"><value>Saved: {0}</value></data>
+  <data name="MsgSaveError" xml:space="preserve"><value>Save error: {0}</value></data>
+  <data name="MsgAudioWarning" xml:space="preserve"><value>[Audio Warning] Data error: {0}</value></data>
+  <data name="MsgRestartNeeded" xml:space="preserve"><value>Language change will take effect on next launch.</value></data>
+</root>

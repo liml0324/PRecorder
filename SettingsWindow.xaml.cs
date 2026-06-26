@@ -8,34 +8,39 @@ public partial class SettingsWindow : Window
     {
         InitializeComponent();
         LoadCurrentSettings();
+        ApplyLanguage();
+    }
+
+    private static string L(string key) => LocalizationService.Get(key);
+    private static string L(string key, params object[] args) => LocalizationService.Get(key, args);
+
+    private void ApplyLanguage()
+    {
+        Title = L("SettingsTitle");
+        btnCancel.Content = L("BtnCancel");
+        btnSave.Content = L("BtnSaveSettings");
+        btnBrowse.Content = L("BrowseBtn");
+        cmbLanguage.SelectedIndex = AppSettings.Language == "zh-CN" ? 1 : 0;
     }
 
     private void LoadCurrentSettings()
     {
-        // 保存路径
         txtSavePath.Text = AppSettings.SavePath;
-
-        // 保存格式
         PopulateFormatList();
         SelectFormat(AppSettings.SaveFormat);
 
-        // 缓冲区时长
         int minutes = AppSettings.BufferDurationMinutes;
         foreach (System.Windows.Controls.ComboBoxItem item in cmbBufferDuration.Items)
         {
             if (item.Tag?.ToString() == minutes.ToString())
-            {
-                cmbBufferDuration.SelectedItem = item;
-                break;
-            }
+            { cmbBufferDuration.SelectedItem = item; break; }
         }
         cmbBufferDuration.SelectedItem ??= cmbBufferDuration.Items[3];
 
-        // 关闭行为
-        if (AppSettings.MinimizeToTray)
-            rbTray.IsChecked = true;
-        else
-            rbExit.IsChecked = true;
+        if (AppSettings.MinimizeToTray) rbTray.IsChecked = true;
+        else rbExit.IsChecked = true;
+
+        cmbLanguage.SelectedIndex = AppSettings.Language == "zh-CN" ? 1 : 0;
     }
 
     private void PopulateFormatList()
@@ -46,9 +51,8 @@ public partial class SettingsWindow : Window
             var item = new System.Windows.Controls.ComboBoxItem
             {
                 Tag = tag,
-                Content = tag == "wav"
-                    ? label
-                    : AppSettings.FfmpegAvailable ? label : $"{label} (FFmpeg 未安装)",
+                Content = tag == "wav" ? label :
+                    AppSettings.FfmpegAvailable ? label : L("FormatNoFfmpeg", label),
                 IsEnabled = tag == "wav" || AppSettings.FfmpegAvailable
             };
             cmbFormat.Items.Add(item);
@@ -60,10 +64,7 @@ public partial class SettingsWindow : Window
         foreach (System.Windows.Controls.ComboBoxItem item in cmbFormat.Items)
         {
             if (item.Tag?.ToString() == tag && item.IsEnabled)
-            {
-                cmbFormat.SelectedItem = item;
-                return;
-            }
+            { cmbFormat.SelectedItem = item; return; }
         }
         cmbFormat.SelectedIndex = 0;
     }
@@ -72,35 +73,34 @@ public partial class SettingsWindow : Window
     {
         using var dialog = new System.Windows.Forms.FolderBrowserDialog
         {
-            Description = "选择音频文件保存目录",
+            Description = L("SavePathLabel"),
             SelectedPath = AppSettings.SavePath,
             ShowNewFolderButton = true
         };
-
         if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-        {
             txtSavePath.Text = dialog.SelectedPath;
-        }
     }
 
     private void BtnSave_Click(object sender, RoutedEventArgs e)
     {
-        // 保存路径
         AppSettings.SavePath = txtSavePath.Text;
-
-        // 保存格式
         var fmtItem = cmbFormat.SelectedItem as System.Windows.Controls.ComboBoxItem;
         AppSettings.SaveFormat = fmtItem?.Tag?.ToString() ?? "wav";
 
-        // 缓冲区时长
         var durItem = cmbBufferDuration.SelectedItem as System.Windows.Controls.ComboBoxItem;
         if (durItem?.Tag != null && int.TryParse(durItem.Tag.ToString(), out int minutes))
-        {
             AppSettings.BufferDurationMinutes = minutes;
-        }
 
-        // 关闭行为
         AppSettings.MinimizeToTray = rbTray.IsChecked == true;
+
+        string newLang = cmbLanguage.SelectedIndex == 1 ? "zh-CN" : "en-US";
+        if (newLang != AppSettings.Language)
+        {
+            AppSettings.Language = newLang;
+            LocalizationService.SetLanguage(newLang);
+            System.Windows.MessageBox.Show(L("MsgRestartNeeded"), L("MsgTitle"),
+                MessageBoxButton.OK, MessageBoxImage.Information);
+        }
 
         DialogResult = true;
         Close();

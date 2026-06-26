@@ -12,12 +12,36 @@ public partial class App : System.Windows.Application
     {
         base.OnStartup(e);
 
+        // 检测语言：Inno Setup 写入 > 系统语言 > 默认 en-US
+        InitLanguage();
+
         _mainWindow = new MainWindow();
 
         CreateTrayIcon();
 
-        // 初始显示主窗口
         _mainWindow.Show();
+    }
+
+    /// <summary>初始化语言：检查 Inno Setup 写入的 language.txt</summary>
+    private static void InitLanguage()
+    {
+        try
+        {
+            string langFile = System.IO.Path.Combine(
+                System.AppDomain.CurrentDomain.BaseDirectory, "language.txt");
+            if (System.IO.File.Exists(langFile))
+            {
+                string lang = System.IO.File.ReadAllText(langFile).Trim();
+                if (lang == "zh-CN" || lang == "en-US")
+                {
+                    AppSettings.Language = lang;
+                    System.IO.File.Delete(langFile); // 仅首次生效
+                }
+            }
+        }
+        catch { }
+
+        LocalizationService.ApplyLanguage(AppSettings.Language);
     }
 
     /// <summary>创建系统托盘图标和右键菜单</summary>
@@ -27,22 +51,22 @@ public partial class App : System.Windows.Application
         {
             Icon = LoadAppIcon(),
             Visible = true,
-            Text = "PRecorder — 录音中"
+            Text = LocalizationService.Get("TrayText")
         };
 
         var menu = new System.Windows.Forms.ContextMenuStrip();
 
-        var showItem = new System.Windows.Forms.ToolStripMenuItem("显示主窗口");
+        var showItem = new System.Windows.Forms.ToolStripMenuItem(LocalizationService.Get("TrayShow"));
         showItem.Click += (_, _) => ShowMainWindow();
         menu.Items.Add(showItem);
 
-        var saveItem = new System.Windows.Forms.ToolStripMenuItem("保存最近 5 分钟");
+        var saveItem = new System.Windows.Forms.ToolStripMenuItem(LocalizationService.Get("TraySave"));
         saveItem.Click += (_, _) => _mainWindow?.SaveRecording();
         menu.Items.Add(saveItem);
 
         menu.Items.Add(new System.Windows.Forms.ToolStripSeparator());
 
-        var exitItem = new System.Windows.Forms.ToolStripMenuItem("退出程序");
+        var exitItem = new System.Windows.Forms.ToolStripMenuItem(LocalizationService.Get("TrayExit"));
         exitItem.Click += (_, _) => ExitApplication();
         menu.Items.Add(exitItem);
 

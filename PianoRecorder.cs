@@ -98,8 +98,7 @@ class PianoRecorder : IDisposable
             }
             catch (Exception ex)
             {
-                // 回调内的异常不会中断程序，但应输出以便排查
-                Console.WriteLine($"[录音警告] 数据处理异常: {ex.Message}");
+                Console.WriteLine(LocalizationService.Get("MsgAudioWarning", ex.Message));
             }
         }
     }
@@ -136,7 +135,7 @@ class PianoRecorder : IDisposable
         {
             if (_circularBuffer == null || _saveBuffer == null || _totalBytesWritten == 0 || _recordingFormat == null)
             {
-                Console.WriteLine("保存失败：缓冲区内目前没有音频数据！");
+                Console.WriteLine(LocalizationService.Get("MsgBufferEmpty"));
                 return;
             }
 
@@ -165,11 +164,11 @@ class PianoRecorder : IDisposable
             {
                 writer.Write(saveBuffer, 0, validBytes);
             }
-            Console.WriteLine($"【成功】音频已保存至: {filePath}");
+            Console.WriteLine(LocalizationService.Get("MsgSaveSuccess", filePath));
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"【失败】保存音频时出错: {ex.Message}");
+            Console.WriteLine(LocalizationService.Get("MsgSaveError", ex.Message));
         }
     }
 

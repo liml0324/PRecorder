@@ -52,6 +52,13 @@ public static class AppSettings
         set { _data.MinimizeToTray = value; Save(); }
     }
 
+    /// <summary>界面语言（zh-CN 或 en-US），默认 en-US</summary>
+    public static string Language
+    {
+        get => _data.Language;
+        set { _data.Language = value; Save(); }
+    }
+
     /// <summary>FFmpeg 是否可用（懒加载，仅检测一次）</summary>
     public static bool FfmpegAvailable
     {
@@ -136,6 +143,7 @@ public static class AppSettings
         public string SavePath { get; set; } =
             Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
         public string SaveFormat { get; set; } = "wav";
+        public string Language { get; set; } = "en-US";
         public int BufferDurationMinutes { get; set; } = 5;
         public bool MinimizeToTray { get; set; } = true;
     }

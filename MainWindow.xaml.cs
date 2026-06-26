@@ -20,6 +20,7 @@ public partial class MainWindow : System.Windows.Window
     {
         RefreshDeviceList();
         SetWindowIcon();
+        ApplyLanguage();
 
         _statusTimer = new DispatcherTimer
         {
@@ -28,6 +29,30 @@ public partial class MainWindow : System.Windows.Window
         _statusTimer.Tick += StatusTimer_Tick;
         _statusTimer.Start();
     }
+
+    /// <summary>应用当前语言到所有 UI 控件</summary>
+    private void ApplyLanguage()
+    {
+        // 按钮
+        btnRecord.Content = _recorder == null ? L("BtnStart") : L("BtnStop");
+        btnSave.Content = L("BtnSave");
+        btnSettings.Content = L("BtnSettings");
+        btnExit.Content = L("BtnExit");
+        btnRefreshDevices.Content = L("RefreshDevices");
+
+        // 设备标签
+        var deviceBlock = cmbDevice.Parent as System.Windows.Controls.Grid;
+        if (deviceBlock?.Parent is System.Windows.Controls.StackPanel sp && sp.Children[0] is System.Windows.Controls.TextBlock tb)
+            tb.Text = L("DeviceLabel");
+
+        // 状态
+        if (_recorder != null) SetStatus(L("StatusRecording"), System.Windows.Media.Brushes.Crimson);
+        else SetStatus(L("StatusIdle"), System.Windows.Media.Brushes.Gray);
+    }
+
+    /// <summary>快捷获取本地化字符串</summary>
+    private static string L(string key) => LocalizationService.Get(key);
+    private static string L(string key, params object[] args) => LocalizationService.Get(key, args);
 
     /// <summary>窗口关闭 → 根据设置决定隐藏到托盘还是直接退出</summary>
     private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -38,7 +63,7 @@ public partial class MainWindow : System.Windows.Window
         {
             e.Cancel = true;
             Hide();
-            ShowTrayBalloon("PRecorder 已最小化到系统托盘", "双击托盘图标可重新打开，右键可退出程序。");
+            ShowTrayBalloon(L("TrayBalloonTitle"), L("TrayBalloonText"));
         }
         else
         {
@@ -114,7 +139,7 @@ public partial class MainWindow : System.Windows.Window
             int deviceId = cmbDevice.SelectedIndex;
             if (deviceId < 0)
             {
-                System.Windows.MessageBox.Show("请先选择输入设备。", "提示",
+                System.Windows.MessageBox.Show(L("MsgSelectDevice"), L("MsgTitle"),
                     System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Warning);
                 return;
             }
@@ -127,18 +152,18 @@ public partial class MainWindow : System.Windows.Window
             }
             catch (Exception ex)
             {
-                System.Windows.MessageBox.Show($"启动录音失败:\n{ex.Message}", "错误",
+                System.Windows.MessageBox.Show(L("MsgStartFailed", ex.Message), L("MsgError"),
                     System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
                 _recorder.Dispose();
                 _recorder = null;
                 return;
             }
 
-            btnRecord.Content = "⏹  停止录音";
+            btnRecord.Content = L("BtnStop");
             cmbDevice.IsEnabled = false;
             btnRefreshDevices.IsEnabled = false;
             btnSave.IsEnabled = true;
-            SetStatus("录音中", System.Windows.Media.Brushes.Crimson);
+            SetStatus(L("StatusRecording"), System.Windows.Media.Brushes.Crimson);
         }
         else
         {
@@ -147,13 +172,13 @@ public partial class MainWindow : System.Windows.Window
             _recorder.Dispose();
             _recorder = null;
 
-            btnRecord.Content = "▶  开始录音";
+            btnRecord.Content = L("BtnStart");
             cmbDevice.IsEnabled = true;
             btnRefreshDevices.IsEnabled = true;
             btnSave.IsEnabled = false;
-            SetStatus("已停止", System.Windows.Media.Brushes.Gray);
-            txtDuration.Text = "已录制: --:--:--";
-            txtBuffer.Text = "缓冲区: 空";
+            SetStatus(L("StatusStopped"), System.Windows.Media.Brushes.Gray);
+            txtDuration.Text = L("DurationEmpty");
+            txtBuffer.Text = L("BufferEmpty");
             bufferBar.Value = 0;
             txtBufferPct.Text = "0%";
         }
@@ -166,7 +191,7 @@ public partial class MainWindow : System.Windows.Window
     {
         if (_recorder == null)
         {
-            System.Windows.MessageBox.Show("当前没有在录音。", "提示",
+            System.Windows.MessageBox.Show(L("MsgNotRecording"), L("MsgTitle"),
                 System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
             return;
         }
@@ -176,11 +201,7 @@ public partial class MainWindow : System.Windows.Window
 
         if (ext != "wav" && !AppSettings.FfmpegAvailable)
         {
-            System.Windows.MessageBox.Show(
-                "未检测到 FFmpeg，无法保存为非 WAV 格式。\n\n" +
-                "请安装 FFmpeg 后重试，或将格式改为 WAV。\n" +
-                "下载地址: https://ffmpeg.org/download.html",
-                "FFmpeg 不可用",
+            System.Windows.MessageBox.Show(L("MsgNoFfmpeg"), L("MsgFfmpegTitle"),
                 System.Windows.MessageBoxButton.OK,
                 System.Windows.MessageBoxImage.Warning);
             return;
@@ -214,7 +235,7 @@ public partial class MainWindow : System.Windows.Window
             }
         }
 
-        txtLastSave.Text = $"上次保存: {fileName}";
+        txtLastSave.Text = L("LastSaved", fileName);
     }
 
     /// <summary>使用 ffmpeg 将 WAV 转为目标格式</summary>
@@ -283,15 +304,16 @@ public partial class MainWindow : System.Windows.Window
 
         var status = _recorder.GetStatus();
 
-        txtDuration.Text = $"已录制: {status.RecordingDuration:hh\\:mm\\:ss}";
+        txtDuration.Text = $"{L("DurationLabel")} {status.RecordingDuration:hh\\:mm\\:ss}";
 
+        int bufferMin = AppSettings.BufferDurationMinutes;
         if (status.BufferDuration > TimeSpan.Zero)
         {
-            txtBuffer.Text = $"缓冲区: {status.BufferDuration:mm\\:ss} (最近 5 分钟)";
+            txtBuffer.Text = L("BufferRecent", status.BufferDuration.ToString(@"hh\:mm\:ss"), bufferMin);
         }
         else
         {
-            txtBuffer.Text = $"缓冲区: {status.BufferDuration:mm\\:ss}";
+            txtBuffer.Text = L("BufferRecentShort", status.BufferDuration.ToString(@"hh\:mm\:ss"));
         }
 
         bufferBar.Value = status.BufferFillPercent;
