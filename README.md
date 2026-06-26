@@ -4,11 +4,13 @@ A lightweight Windows desktop app for **pre-recording** audio — it continuousl
 
 ## Features
 
-- **Always-on Pre-recording** — Continuously buffers the last 5 minutes of audio in memory with zero disk usage until you save.
+- **Always-on Pre-recording** — Continuously buffers audio in memory with zero disk usage until you save.
 - **One-click Save** — Press a button (or right-click the tray icon) to export the recent audio as a file.
+- **Configurable Buffer** — Adjust the ring buffer duration from 1 to 60 minutes via the Settings panel.
 - **Multi-format Export** — Save as WAV, MP3, FLAC, AAC, or OGG Vorbis (with FFmpeg).
 - **System Tray** — Minimizes to the notification area; keep recording in the background without a window.
-- **Custom Save Location** — Choose any folder as the output directory.
+- **Flexible Close Behavior** — Choose whether closing the window minimizes to tray or exits the app.
+- **Custom Save Location & Format** — Set your preferred output folder and default file format in Settings.
 - **Device Selection** — Pick any available audio input device (microphone, line-in, USB audio interface, etc.).
 
 ## How It Works
@@ -21,9 +23,9 @@ A lightweight Windows desktop app for **pre-recording** audio — it continuousl
                        │ PCM audio stream
                        ▼
 ┌──────────────────────────────────────────────────────┐
-│              Ring Buffer (in memory)                  │
-│            Last 5 minutes, 44100 Hz 16-bit stereo     │
-│                  ~53 MB, zero GC pressure             │
+│           Ring Buffer (in memory)                     │
+│    Configurable: 1–60 min, 44100 Hz 16-bit stereo    │
+│           zero allocations, zero GC pressure          │
 └──────────────────────┬───────────────────────────────┘
                        │ User clicks "Save"
                        ▼
@@ -68,13 +70,15 @@ The compiled executable is at `bin/Release/net10.0-windows/PRecorder.exe`.
 | Action | How |
 |--------|-----|
 | Start recording | Click **▶ Start Recording** |
-| Save last 5 minutes | Click **💾 Save** or right-click tray icon → **Save** |
-| Change save location | Click **Browse...** next to the path field |
-| Change output format | Select from the format dropdown |
+| Save buffered audio | Click **💾 Save** or right-click tray icon → **Save** |
 | Stop recording | Click **⏹ Stop Recording** |
-| Minimize to tray | Click the window's **X** button |
+| Open settings | Click **⚙ Settings** |
+| Change save path / format | Settings → **Save Path** or **Format** dropdown |
+| Change buffer duration | Settings → **Buffer Duration** (1–60 min) |
+| Change close behavior | Settings → **Close Window** (tray vs. exit) |
+| Minimize to tray | Click the window's **X** button (if tray mode is on) |
 | Restore from tray | Double-click the tray icon |
-| Exit completely | Right-click tray icon → **Exit** or click **退出** in the window |
+| Exit completely | Right-click tray icon → **Exit** or click **退出** button |
 
 ## Supported Export Formats
 
@@ -97,8 +101,10 @@ The compiled executable is at `bin/Release/net10.0-windows/PRecorder.exe`.
 ```
 PRecorder/
 ├── App.xaml / .cs          # WPF application entry, system tray icon
-├── MainWindow.xaml / .cs   # Main window UI and logic
+├── MainWindow.xaml / .cs   # Main window UI and recording logic
+├── SettingsWindow.xaml/.cs # Settings panel (path, format, buffer, behavior)
 ├── PianoRecorder.cs        # Core recorder with ring buffer
+├── AppSettings.cs          # Persistent settings (JSON in %AppData%)
 ├── PRecorder.csproj        # Project configuration
 └── Program.cs              # (placeholder — entry via App.xaml)
 ```
