@@ -1,0 +1,21 @@
+## .NET 构建产物
+bin/
+obj/
+
+## VS Code
+.vscode/
+
+## Visual Studio
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+
+## 系统文件
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+## 录音输出（本地生成的 WAV 不提交）
+*.wav
