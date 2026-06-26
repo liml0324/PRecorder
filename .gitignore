@@ -17,9 +17,6 @@ Thumbs.db
 Desktop.ini
 .DS_Store
 
-## 图标原始文件（仅保留压缩版）
-icon_original.png
-
 ## 录音输出（本地生成的 WAV 不提交）
 *.wav
 
