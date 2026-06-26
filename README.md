@@ -112,3 +112,7 @@ PRecorder/
 ## License
 
 MIT
+
+---
+
+*App icon created by Gemini, further modified with ChatGPT.*

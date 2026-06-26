@@ -25,7 +25,7 @@ public partial class App : System.Windows.Application
     {
         _trayIcon = new System.Windows.Forms.NotifyIcon
         {
-            Icon = CreateTrayIcon(System.Drawing.Color.DodgerBlue),
+            Icon = LoadAppIcon(),
             Visible = true,
             Text = "PRecorder — 录音中"
         };
@@ -76,17 +76,47 @@ public partial class App : System.Windows.Application
             System.Windows.Forms.ToolTipIcon.Info);
     }
 
-    /// <summary>程序化生成托盘图标（蓝色圆形）</summary>
-    private static System.Drawing.Icon CreateTrayIcon(System.Drawing.Color color)
+    /// <summary>从 logo.png 加载托盘图标</summary>
+    private static System.Drawing.Icon LoadAppIcon()
+    {
+        string iconPath = System.IO.Path.Combine(
+            System.AppDomain.CurrentDomain.BaseDirectory, "icon.png");
+
+        try
+        {
+            using var bitmap = new System.Drawing.Bitmap(iconPath);
+            // 转为 32x32 的图标
+            using var resized = new System.Drawing.Bitmap(bitmap, 32, 32);
+            IntPtr hIcon = resized.GetHicon();
+            var icon = (System.Drawing.Icon)System.Drawing.Icon.FromHandle(hIcon).Clone();
+            NativeMethods.DestroyIcon(hIcon);
+            return icon;
+        }
+        catch
+        {
+            // 回退：生成蓝色圆形图标
+            return CreateFallbackIcon();
+        }
+    }
+
+    /// <summary>回退图标（蓝色圆形）</summary>
+    private static System.Drawing.Icon CreateFallbackIcon()
     {
         int size = 32;
         using var bitmap = new System.Drawing.Bitmap(size, size);
         using var g = System.Drawing.Graphics.FromImage(bitmap);
         g.SmoothingMode = SmoothingMode.AntiAlias;
         g.Clear(System.Drawing.Color.Transparent);
-        using var brush = new SolidBrush(color);
+        using var brush = new SolidBrush(System.Drawing.Color.DodgerBlue);
         g.FillEllipse(brush, 2, 2, size - 4, size - 4);
         return System.Drawing.Icon.FromHandle(bitmap.GetHicon());
+    }
+
+    /// <summary>销毁原生图标句柄</summary>
+    private static class NativeMethods
+    {
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        public static extern bool DestroyIcon(IntPtr hIcon);
     }
 
     protected override void OnExit(System.Windows.ExitEventArgs e)

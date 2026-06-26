@@ -15,4 +15,10 @@
     <PackageReference Include="NAudio.WinMM" Version="2.3.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>
