@@ -1,6 +1,6 @@
 using NAudio.Wave;
 
-namespace PRecording;
+namespace PRecorder;
 
 /// <summary>录音器状态快照（线程安全读取）</summary>
 public readonly record struct RecorderStatus(

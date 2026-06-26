@@ -1,7 +1,7 @@
 using System.Drawing;
 using System.Drawing.Drawing2D;
 
-namespace PRecording;
+namespace PRecorder;
 
 public partial class App : System.Windows.Application
 {
@@ -27,7 +27,7 @@ public partial class App : System.Windows.Application
         {
             Icon = CreateTrayIcon(System.Drawing.Color.DodgerBlue),
             Visible = true,
-            Text = "电钢琴预录制 — 录音中"
+            Text = "PRecorder — 录音中"
         };
 
         var menu = new System.Windows.Forms.ContextMenuStrip();

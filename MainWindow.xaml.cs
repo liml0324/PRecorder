@@ -2,7 +2,7 @@ using NAudio.Wave;
 using System.Diagnostics;
 using System.Windows.Threading;
 
-namespace PRecording;
+namespace PRecorder;
 
 public partial class MainWindow : System.Windows.Window
 {
