@@ -23,38 +23,6 @@ if (-not $Full -and -not $Portable) { $Full = $true; $Portable = $true }
 $ErrorActionPreference = "Stop"
 $projectRoot = Split-Path -Parent $PSScriptRoot
 
-# P/Invoke helper for DestroyIcon
-Add-Type -TypeDefinition @'
-using System;
-using System.Runtime.InteropServices;
-public class NativeMethods {
-    [DllImport("user32.dll")]
-    public static extern bool DestroyIcon(IntPtr hIcon);
-}
-'@ -ErrorAction SilentlyContinue
-
-# Generate icon.ico from icon_48.png
-Add-Type -AssemblyName System.Drawing
-$icoPath = "$projectRoot\icon.ico"
-$pngPath = "$projectRoot\icon_48.png"
-if (-not (Test-Path $icoPath) -or (Get-Item $pngPath).LastWriteTime -gt (Get-Item $icoPath).LastWriteTime) {
-    $src = [System.Drawing.Bitmap]::FromFile($pngPath)
-    # Fix: convert to Format32bppArgb to prevent GetHicon() RGB/BGR swap
-    $bmp = New-Object System.Drawing.Bitmap($src.Width, $src.Height, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
-    $g = [System.Drawing.Graphics]::FromImage($bmp)
-    $g.DrawImage($src, 0, 0, $src.Width, $src.Height)
-    $g.Dispose(); $src.Dispose()
-
-    $hIcon = $bmp.GetHicon()
-    $icon = [System.Drawing.Icon]::FromHandle($hIcon)
-    $fs = [System.IO.File]::Create($icoPath)
-    $icon.Save($fs)
-    $fs.Close()
-    $icon.Dispose(); $bmp.Dispose()
-    [NativeMethods]::DestroyIcon($hIcon) | Out-Null
-    Write-Host "Generated icon.ico ($((Get-Item $icoPath).Length) bytes)" -ForegroundColor DarkGray
-}
-
 # Locate ISCC.exe
 $iscc = Get-Command "ISCC.exe" -ErrorAction SilentlyContinue
 if (-not $iscc) {
