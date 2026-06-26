@@ -10,39 +10,16 @@ public partial class MainWindow : System.Windows.Window
     private DispatcherTimer? _statusTimer;
     private bool _isExiting;
 
-    // 保存设置
-    private string _savePath = ""; // 在 Window_Loaded 中初始化为桌面路径
-    private bool _ffmpegAvailable;
-
-    // 支持的导出格式
-    private static readonly (string Tag, string Label)[] _formats =
-    [
-        ("wav",  "WAV (无损)"),
-        ("mp3",  "MP3 (320 kbps)"),
-        ("flac", "FLAC (无损压缩)"),
-        ("aac",  "AAC (256 kbps)"),
-        ("ogg",  "OGG Vorbis"),
-    ];
-
     public MainWindow()
     {
         InitializeComponent();
     }
 
-    /// <summary>窗口加载：初始化设备列表、保存设置和状态刷新定时器</summary>
+    /// <summary>窗口加载：初始化设备列表和状态刷新定时器</summary>
     private void Window_Loaded(object sender, System.Windows.RoutedEventArgs e)
     {
         RefreshDeviceList();
 
-        // 保存路径默认为桌面
-        _savePath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-        txtSavePath.Text = _savePath;
-
-        // 检测 ffmpeg 是否可用
-        CheckFfmpeg();
-        PopulateFormatList();
-
-        // 每 500ms 刷新一次状态显示（DispatcherTimer 在 UI 线程触发，无需 Invoke）
         _statusTimer = new DispatcherTimer
         {
             Interval = TimeSpan.FromMilliseconds(500)
@@ -51,16 +28,22 @@ public partial class MainWindow : System.Windows.Window
         _statusTimer.Start();
     }
 
-    /// <summary>窗口关闭 → 隐藏到托盘，并弹出气泡提示</summary>
+    /// <summary>窗口关闭 → 根据设置决定隐藏到托盘还是直接退出</summary>
     private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
     {
-        if (!_isExiting)
+        if (_isExiting) return;
+
+        if (AppSettings.MinimizeToTray)
         {
             e.Cancel = true;
             Hide();
-
-            // 显示气泡提示，告知用户程序仍在托盘运行
             ShowTrayBalloon("PRecorder 已最小化到系统托盘", "双击托盘图标可重新打开，右键可退出程序。");
+        }
+        else
+        {
+            _isExiting = true;
+            Cleanup();
+            (System.Windows.Application.Current as App)?.ExitApplication();
         }
     }
 
@@ -69,72 +52,6 @@ public partial class MainWindow : System.Windows.Window
     {
         var app = System.Windows.Application.Current as App;
         app?.ShowBalloonTip(title, text);
-    }
-
-    // ==================== FFmpeg 检测 ====================
-
-    /// <summary>检测系统是否安装了 ffmpeg（通过执行 ffmpeg -version）</summary>
-    private void CheckFfmpeg()
-    {
-        try
-        {
-            using var process = new Process
-            {
-                StartInfo = new ProcessStartInfo
-                {
-                    FileName = "ffmpeg",
-                    Arguments = "-version",
-                    UseShellExecute = false,
-                    CreateNoWindow = true,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true
-                }
-            };
-            process.Start();
-            process.WaitForExit(3000);
-            _ffmpegAvailable = process.ExitCode == 0;
-        }
-        catch
-        {
-            _ffmpegAvailable = false;
-        }
-    }
-
-    /// <summary>根据 ffmpeg 是否可用来填充格式下拉框</summary>
-    private void PopulateFormatList()
-    {
-        cmbFormat.Items.Clear();
-        foreach (var (tag, label) in _formats)
-        {
-            var item = new System.Windows.Controls.ComboBoxItem
-            {
-                Tag = tag,
-                Content = tag == "wav"
-                    ? label
-                    : _ffmpegAvailable ? label : $"{label} (FFmpeg 未安装)",
-                IsEnabled = tag == "wav" || _ffmpegAvailable
-            };
-            cmbFormat.Items.Add(item);
-        }
-        cmbFormat.SelectedIndex = 0;
-    }
-
-    // ==================== 保存路径选择 ====================
-
-    private void BtnBrowsePath_Click(object sender, System.Windows.RoutedEventArgs e)
-    {
-        using var dialog = new System.Windows.Forms.FolderBrowserDialog
-        {
-            Description = "选择音频文件保存目录",
-            SelectedPath = _savePath,
-            ShowNewFolderButton = true
-        };
-
-        if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-        {
-            _savePath = dialog.SelectedPath;
-            txtSavePath.Text = _savePath;
-        }
     }
 
     // ==================== 设备管理 ====================
@@ -158,6 +75,15 @@ public partial class MainWindow : System.Windows.Window
         RefreshDeviceList();
     }
 
+    private void BtnSettings_Click(object sender, System.Windows.RoutedEventArgs e)
+    {
+        var settingsWindow = new SettingsWindow
+        {
+            Owner = this
+        };
+        settingsWindow.ShowDialog();
+    }
+
     // ==================== 录音控制 ====================
 
     private void BtnRecord_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -176,7 +102,8 @@ public partial class MainWindow : System.Windows.Window
             _recorder = new PianoRecorder();
             try
             {
-                _recorder.StartRecording(deviceId);
+                int bufferSec = AppSettings.BufferDurationMinutes * 60;
+                _recorder.StartRecording(deviceId, bufferSec);
             }
             catch (Exception ex)
             {
@@ -224,15 +151,14 @@ public partial class MainWindow : System.Windows.Window
             return;
         }
 
-        // 获取当前选中的格式
-        var selectedItem = cmbFormat.SelectedItem as System.Windows.Controls.ComboBoxItem;
-        string ext = selectedItem?.Tag?.ToString() ?? "wav";
+        string ext = AppSettings.SaveFormat;
+        string savePath = AppSettings.SavePath;
 
-        if (ext != "wav" && !_ffmpegAvailable)
+        if (ext != "wav" && !AppSettings.FfmpegAvailable)
         {
             System.Windows.MessageBox.Show(
                 "未检测到 FFmpeg，无法保存为非 WAV 格式。\n\n" +
-                "请安装 FFmpeg 后重试，或选择 WAV 格式保存。\n" +
+                "请安装 FFmpeg 后重试，或将格式改为 WAV。\n" +
                 "下载地址: https://ffmpeg.org/download.html",
                 "FFmpeg 不可用",
                 System.Windows.MessageBoxButton.OK,
@@ -241,19 +167,17 @@ public partial class MainWindow : System.Windows.Window
         }
 
         // 确保保存目录存在
-        try { System.IO.Directory.CreateDirectory(_savePath); } catch { }
+        try { System.IO.Directory.CreateDirectory(savePath); } catch { }
 
-        string fileName = $"Piano_{DateTime.Now:yyyyMMdd_HHmmss}.{ext}";
-        string fullPath = System.IO.Path.Combine(_savePath, fileName);
+        string fileName = $"PRecorder_{DateTime.Now:yyyyMMdd_HHmmss}.{ext}";
+        string fullPath = System.IO.Path.Combine(savePath, fileName);
 
         if (ext == "wav")
         {
-            // WAV 格式：直接保存
             _recorder.SaveHistory(fullPath);
         }
         else
         {
-            // 其他格式：先保存为临时 WAV，再用 ffmpeg 转码
             string tempWav = System.IO.Path.Combine(
                 System.IO.Path.GetTempPath(),
                 $"~prec_{Guid.NewGuid():N}.wav");
@@ -266,7 +190,6 @@ public partial class MainWindow : System.Windows.Window
             }
             finally
             {
-                // 清理临时 WAV 文件
                 try { System.IO.File.Delete(tempWav); } catch { }
             }
         }

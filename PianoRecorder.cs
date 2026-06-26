@@ -20,7 +20,6 @@ class PianoRecorder : IDisposable
     private const int SampleRate = 44100;
     private const int BitsPerSample = 16;
     private const int Channels = 2;
-    private const int BufferDurationSeconds = 60 * 5; // 5 分钟循环缓冲
 
     // ---- 内部状态 ----
     private WaveInEvent? _waveIn;
@@ -29,15 +28,19 @@ class PianoRecorder : IDisposable
     private int _writePos;                // 下一次写入的起始位置
     private long _totalBytesWritten;      // 启动以来累计写入字节数（用于判断是否回绕）
     private int _bufferSize;              // 缓冲区总大小（字节）
+    private int _bufferDurationSeconds;   // 可配置的缓冲区时长（秒）
     private WaveFormat? _recordingFormat;
     private readonly object _bufferLock = new();
     private bool _disposed;
 
     /// <summary>启动录音</summary>
-    public void StartRecording(int deviceId)
+    /// <param name="deviceId">音频输入设备 ID</param>
+    /// <param name="bufferDurationSeconds">循环缓冲区时长（秒），默认 300（5 分钟）</param>
+    public void StartRecording(int deviceId, int bufferDurationSeconds = 300)
     {
+        _bufferDurationSeconds = bufferDurationSeconds;
         _recordingFormat = new WaveFormat(SampleRate, BitsPerSample, Channels);
-        _bufferSize = _recordingFormat.AverageBytesPerSecond * BufferDurationSeconds;
+        _bufferSize = _recordingFormat.AverageBytesPerSecond * _bufferDurationSeconds;
         _circularBuffer = new byte[_bufferSize];
         _saveBuffer = new byte[_bufferSize];   // 预分配导出缓冲，避免 Save 时在锁内分配大数组
         _writePos = 0;
