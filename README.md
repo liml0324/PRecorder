@@ -65,6 +65,16 @@ dotnet build -c Release
 
 The compiled executable is at `bin/Release/net10.0-windows/PRecorder.exe`.
 
+### Package as Installer
+
+Requires [Inno Setup 6](https://jrsoftware.org/isinfo.php).
+
+```powershell
+.\Packaging\build.ps1
+```
+
+Produces a self-contained `PRecorder_Setup_x64.exe` (~50 MB) that includes the .NET runtime — users just double-click to install.
+
 ## Usage
 
 | Action | How |
@@ -106,7 +116,12 @@ PRecorder/
 ├── PianoRecorder.cs        # Core recorder with ring buffer
 ├── AppSettings.cs          # Persistent settings (JSON in %AppData%)
 ├── PRecorder.csproj        # Project configuration
-└── Program.cs              # (placeholder — entry via App.xaml)
+├── Program.cs              # (placeholder)
+├── Packaging/
+│   ├── build.ps1           # Inno Setup build script
+│   ├── setup.iss           # Inno Setup config
+│   └── resize-icon.ps1     # Icon compression tool
+└── icon*.png               # App icons (multiple sizes)
 ```
 
 ## License

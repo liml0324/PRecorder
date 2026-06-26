@@ -80,7 +80,7 @@ public partial class App : System.Windows.Application
     private static System.Drawing.Icon LoadAppIcon()
     {
         string iconPath = System.IO.Path.Combine(
-            System.AppDomain.CurrentDomain.BaseDirectory, "icon.png");
+            System.AppDomain.CurrentDomain.BaseDirectory, "icon_32.png");
 
         try
         {

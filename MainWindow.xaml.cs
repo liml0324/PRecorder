@@ -19,6 +19,7 @@ public partial class MainWindow : System.Windows.Window
     private void Window_Loaded(object sender, System.Windows.RoutedEventArgs e)
     {
         RefreshDeviceList();
+        SetWindowIcon();
 
         _statusTimer = new DispatcherTimer
         {
@@ -52,6 +53,25 @@ public partial class MainWindow : System.Windows.Window
     {
         var app = System.Windows.Application.Current as App;
         app?.ShowBalloonTip(title, text);
+    }
+
+    /// <summary>安全加载窗口图标（缺失时静默跳过，不影响启动）</summary>
+    private void SetWindowIcon()
+    {
+        try
+        {
+            string iconPath = System.IO.Path.Combine(
+                System.AppDomain.CurrentDomain.BaseDirectory, "icon.png");
+            if (System.IO.File.Exists(iconPath))
+            {
+                Icon = new System.Windows.Media.Imaging.BitmapImage(
+                    new Uri(iconPath));
+            }
+        }
+        catch
+        {
+            // icon.png not found - window uses default icon, app still works
+        }
     }
 
     // ==================== 设备管理 ====================
