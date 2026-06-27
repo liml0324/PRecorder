@@ -123,8 +123,6 @@ public partial class SettingsWindow : Window
         {
             AppSettings.Language = newLang;
             LocalizationService.SetLanguage(newLang);
-            System.Windows.MessageBox.Show(L("MsgRestartNeeded"), L("MsgTitle"),
-                MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         DialogResult = true;
