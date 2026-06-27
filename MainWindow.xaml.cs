@@ -13,6 +13,7 @@ public partial class MainWindow : System.Windows.Window
     public MainWindow()
     {
         InitializeComponent();
+        ShowInTaskbar = true;
     }
 
     /// <summary>窗口加载：初始化设备列表和状态刷新定时器</summary>
@@ -22,6 +23,11 @@ public partial class MainWindow : System.Windows.Window
         SetWindowIcon();
         PopulateSaveDuration();
         ApplyLanguage();
+
+        // 确保窗口获得前台焦点（修复便携版 VBS 启动后窗口藏在后台的问题）
+        Activate();
+        Topmost = true;
+        Topmost = false;
 
         _statusTimer = new DispatcherTimer
         {
