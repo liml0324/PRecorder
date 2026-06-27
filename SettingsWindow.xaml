@@ -17,7 +17,7 @@
         <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
             <StackPanel>
                 <!-- 保存路径 -->
-                <TextBlock Text="音频保存路径:" FontWeight="SemiBold" Margin="0,0,0,6"/>
+                <TextBlock x:Name="lblSavePath" FontWeight="SemiBold" Margin="0,0,0,6"/>
                 <Grid Margin="0,0,0,16">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -25,39 +25,30 @@
                     </Grid.ColumnDefinitions>
                     <TextBox x:Name="txtSavePath" Grid.Column="0" Margin="0,0,8,0"
                              VerticalAlignment="Center" IsReadOnly="True"/>
-                    <Button x:Name="btnBrowse" Grid.Column="1" Content="浏览..." Width="70" Height="26"
+                    <Button x:Name="btnBrowse" Grid.Column="1" Width="70" Height="26"
                             Click="BtnBrowsePath_Click"/>
                 </Grid>
 
                 <!-- 保存格式 -->
-                <TextBlock Text="保存格式:" FontWeight="SemiBold" Margin="0,0,0,6"/>
+                <TextBlock x:Name="lblFormat" FontWeight="SemiBold" Margin="0,0,0,6"/>
                 <ComboBox x:Name="cmbFormat" Margin="0,0,0,16" SelectedIndex="0"/>
 
                 <!-- 缓冲区时长 -->
-                <TextBlock Text="循环缓冲区长度（分钟）:" FontWeight="SemiBold" Margin="0,0,0,6"/>
-                <ComboBox x:Name="cmbBufferDuration" Margin="0,0,0,16">
-                    <ComboBoxItem Tag="1"  Content="1 分钟"/>
-                    <ComboBoxItem Tag="2"  Content="2 分钟"/>
-                    <ComboBoxItem Tag="3"  Content="3 分钟"/>
-                    <ComboBoxItem Tag="5"  Content="5 分钟（默认）"/>
-                    <ComboBoxItem Tag="10" Content="10 分钟"/>
-                    <ComboBoxItem Tag="15" Content="15 分钟"/>
-                    <ComboBoxItem Tag="30" Content="30 分钟"/>
-                    <ComboBoxItem Tag="60" Content="60 分钟"/>
-                </ComboBox>
+                <TextBlock x:Name="lblBufferDuration" FontWeight="SemiBold" Margin="0,0,0,6"/>
+                <ComboBox x:Name="cmbBufferDuration" Margin="0,0,0,16"/>
 
                 <!-- 语言 -->
-                <TextBlock Text="Language:" FontWeight="SemiBold" Margin="0,0,0,6"/>
+                <TextBlock x:Name="lblLanguage" FontWeight="SemiBold" Margin="0,0,0,6"/>
                 <ComboBox x:Name="cmbLanguage" Margin="0,0,0,16" SelectedIndex="0">
                     <ComboBoxItem Content="English"/>
                     <ComboBoxItem Content="中文 (Chinese)"/>
                 </ComboBox>
 
                 <!-- 关闭行为 -->
-                <TextBlock Text="关闭窗口时:" FontWeight="SemiBold" Margin="0,0,0,6"/>
+                <TextBlock x:Name="lblCloseBehavior" FontWeight="SemiBold" Margin="0,0,0,6"/>
                 <StackPanel Margin="0,0,0,8">
-                    <RadioButton x:Name="rbTray" Content="最小化到系统托盘" Margin="0,0,0,6"/>
-                    <RadioButton x:Name="rbExit" Content="直接退出程序"/>
+                    <RadioButton x:Name="rbTray" Margin="0,0,0,6"/>
+                    <RadioButton x:Name="rbExit"/>
                 </StackPanel>
             </StackPanel>
         </ScrollViewer>
@@ -65,9 +56,9 @@
         <!-- 操作按钮（底部居中） -->
         <StackPanel Grid.Row="1" Orientation="Horizontal"
                     HorizontalAlignment="Center" Margin="0,12,0,0">
-            <Button x:Name="btnCancel" Content="取消" Width="80" Height="28"
+            <Button x:Name="btnCancel" Width="80" Height="28"
                     Margin="0,0,12,0" Click="BtnCancel_Click" IsCancel="True"/>
-            <Button x:Name="btnSave" Content="保存" Width="80" Height="28"
+            <Button x:Name="btnSave" Width="80" Height="28"
                     Click="BtnSave_Click" IsDefault="True"/>
         </StackPanel>
     </Grid>

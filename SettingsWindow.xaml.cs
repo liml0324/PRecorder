@@ -17,10 +17,34 @@ public partial class SettingsWindow : Window
     private void ApplyLanguage()
     {
         Title = L("SettingsTitle");
+        lblSavePath.Text = L("SavePathLabel");
+        lblFormat.Text = L("FormatLabel");
+        lblBufferDuration.Text = L("BufferDurationLabel");
+        lblLanguage.Text = L("LanguageLabel");
+        lblCloseBehavior.Text = L("CloseBehaviorLabel");
+        rbTray.Content = L("MinimizeToTray");
+        rbExit.Content = L("ExitDirectly");
+        btnBrowse.Content = L("BrowseBtn");
         btnCancel.Content = L("BtnCancel");
         btnSave.Content = L("BtnSaveSettings");
-        btnBrowse.Content = L("BrowseBtn");
+        PopulateBufferDurations();
         cmbLanguage.SelectedIndex = AppSettings.Language == "zh-CN" ? 1 : 0;
+    }
+
+    private void PopulateBufferDurations()
+    {
+        cmbBufferDuration.Items.Clear();
+        int[] values = { 1, 2, 3, 5, 10, 15, 30, 60 };
+        string[] keys = { "Duration1Min", "Duration2Min", "Duration3Min", "Duration5Min",
+                          "Duration10Min", "Duration15Min", "Duration30Min", "Duration60Min" };
+        for (int i = 0; i < values.Length; i++)
+        {
+            cmbBufferDuration.Items.Add(new System.Windows.Controls.ComboBoxItem
+            {
+                Tag = values[i],
+                Content = L(keys[i])
+            });
+        }
     }
 
     private void LoadCurrentSettings()
@@ -28,6 +52,7 @@ public partial class SettingsWindow : Window
         txtSavePath.Text = AppSettings.SavePath;
         PopulateFormatList();
         SelectFormat(AppSettings.SaveFormat);
+        PopulateBufferDurations();
 
         int minutes = AppSettings.BufferDurationMinutes;
         foreach (System.Windows.Controls.ComboBoxItem item in cmbBufferDuration.Items)
