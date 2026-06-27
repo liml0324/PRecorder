@@ -13,7 +13,7 @@
 
 param(
     [string]$Configuration = "Release",
-    [string]$Version = "1.0.0",
+    [string]$Version = "1.0.1",
     [switch]$Full,
     [switch]$Portable
 )

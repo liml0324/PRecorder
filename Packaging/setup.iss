@@ -5,7 +5,7 @@
 ; ============================================================
 
 #define AppName       "PRecorder"
-#define AppVersion    "1.0.0"
+#define AppVersion    "1.0.1"
 #define AppPublisher  "PRecorder"
 #define AppURL        "https://github.com"
 #define AppExeName    "PRecorder.exe"

@@ -2,7 +2,7 @@
 
 All notable changes to PRecorder will be documented in this file.
 
-## [Unreleased]
+## [1.0.1] - 2026-06-27
 
 ### Added
 - Multi-language support (English / Chinese)
@@ -45,5 +45,5 @@ All notable changes to PRecorder will be documented in this file.
 - Missing icon causing silent crash on startup
 - Framework-dependent portable version apphost compatibility
 
-[Unreleased]: https://github.com/liml0324/PRecorder/compare/v1.0.0...HEAD
+[1.0.1]: https://github.com/liml0324/PRecorder/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/liml0324/PRecorder/releases/tag/v1.0.0

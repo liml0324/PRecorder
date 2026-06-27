@@ -4,7 +4,7 @@
 ; ============================================================
 
 #define AppName       "PRecorder"
-#define AppVersion    "1.0.0"
+#define AppVersion    "1.0.1"
 #define AppPublisher  "PRecorder"
 #define OutputDir     "..\bin"
 #define SourceDir     "..\bin\publish_fd"
