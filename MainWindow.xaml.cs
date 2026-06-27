@@ -41,14 +41,15 @@ public partial class MainWindow : System.Windows.Window
         btnExit.Content = L("BtnExit");
         btnRefreshDevices.Content = L("RefreshDevices");
 
-        // 设备标签
-        var deviceBlock = cmbDevice.Parent as System.Windows.Controls.Grid;
-        if (deviceBlock?.Parent is System.Windows.Controls.StackPanel sp && sp.Children[0] is System.Windows.Controls.TextBlock tb)
-            tb.Text = L("DeviceLabel");
+        // 标签
+        lblDevice.Text = L("DeviceLabel");
 
         // 状态
         if (_recorder != null) SetStatus(L("StatusRecording"), System.Windows.Media.Brushes.Crimson);
-        else SetStatus(L("StatusIdle"), System.Windows.Media.Brushes.Gray);
+        else { SetStatus(L("StatusIdle"), System.Windows.Media.Brushes.Gray); txtDuration.Text = L("DurationEmpty"); txtBuffer.Text = L("BufferEmpty"); }
+
+        // 状态栏初始文本
+        txtLastSave.Text = L("StatusReady");
     }
 
     /// <summary>快捷获取本地化字符串</summary>
