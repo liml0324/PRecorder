@@ -45,6 +45,13 @@ public static class AppSettings
         set { _data.BufferDurationMinutes = Math.Clamp(value, 1, 60); Save(); }
     }
 
+    /// <summary>保存最近 N 分钟的音频（分钟），默认 5</summary>
+    public static int SaveDurationMinutes
+    {
+        get => _data.SaveDurationMinutes;
+        set { _data.SaveDurationMinutes = Math.Clamp(value, 1, Math.Min(60, BufferDurationMinutes)); Save(); }
+    }
+
     /// <summary>关闭窗口时是否最小化到托盘（false = 直接退出）</summary>
     public static bool MinimizeToTray
     {
@@ -145,6 +152,7 @@ public static class AppSettings
         public string SaveFormat { get; set; } = "wav";
         public string Language { get; set; } = "en-US";
         public int BufferDurationMinutes { get; set; } = 5;
+        public int SaveDurationMinutes { get; set; } = 5;
         public bool MinimizeToTray { get; set; } = true;
     }
 }

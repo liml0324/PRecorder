@@ -61,7 +61,7 @@
   <!-- Tray -->
   <data name="TrayText" xml:space="preserve"><value>PRecorder — 录音中</value></data>
   <data name="TrayShow" xml:space="preserve"><value>显示主窗口</value></data>
-  <data name="TraySave" xml:space="preserve"><value>保存最近 5 分钟</value></data>
+  <data name="TraySave" xml:space="preserve"><value>保存最近录音</value></data>
   <data name="TrayExit" xml:space="preserve"><value>退出程序</value></data>
   <data name="TrayBalloonTitle" xml:space="preserve"><value>PRecorder 已最小化到系统托盘</value></data>
   <data name="TrayBalloonText" xml:space="preserve"><value>双击托盘图标可重新打开，右键可退出程序。</value></data>

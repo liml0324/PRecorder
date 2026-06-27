@@ -6,7 +6,7 @@ A lightweight Windows desktop app for **pre-recording** audio — it continuousl
 
 - **Always-on Pre-recording** — Continuously buffers audio in memory with zero disk usage until you save.
 - **One-click Save** — Press a button (or right-click the tray icon) to export the recent audio as a file.
-- **Configurable Buffer** — Adjust the ring buffer duration from 1 to 60 minutes via the Settings panel.
+- **Configurable Buffer & Save** — Independently adjust ring buffer duration and save length (1–60 min each) via Settings.
 - **Multi-format Export** — Save as WAV, MP3, FLAC, AAC, or OGG Vorbis (with FFmpeg).
 - **System Tray** — Minimizes to the notification area; keep recording in the background without a window.
 - **Flexible Close Behavior** — Choose whether closing the window minimizes to tray or exits the app.
@@ -85,6 +85,7 @@ Produces a self-contained `PRecorder_Setup_x64.exe` (~50 MB) that includes the .
 | Open settings | Click **⚙ Settings** |
 | Change save path / format | Settings → **Save Path** or **Format** dropdown |
 | Change buffer duration | Settings → **Buffer Duration** (1–60 min) |
+| Change save length | Settings → **Save Duration** (1–60 min, capped at buffer) |
 | Change close behavior | Settings → **Close Window** (tray vs. exit) |
 | Minimize to tray | Click the window's **X** button (if tray mode is on) |
 | Restore from tray | Double-click the tray icon |

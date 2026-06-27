@@ -56,7 +56,7 @@
 
   <data name="TrayText" xml:space="preserve"><value>PRecorder — Recording</value></data>
   <data name="TrayShow" xml:space="preserve"><value>Show Window</value></data>
-  <data name="TraySave" xml:space="preserve"><value>Save Last 5 Minutes</value></data>
+  <data name="TraySave" xml:space="preserve"><value>Save Recent Audio</value></data>
   <data name="TrayExit" xml:space="preserve"><value>Exit</value></data>
   <data name="TrayBalloonTitle" xml:space="preserve"><value>PRecorder minimized to tray</value></data>
   <data name="TrayBalloonText" xml:space="preserve"><value>Double-click tray icon to restore, right-click to exit.</value></data>

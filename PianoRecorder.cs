@@ -123,14 +123,15 @@ class PianoRecorder : IDisposable
         }
     }
 
-    /// <summary>将缓冲区中的音频保存为 WAV 文件（锁内零分配，磁盘 I/O 在锁外执行）</summary>
-    public void SaveHistory(string filePath)
+    /// <summary>将缓冲区中最近指定秒数的音频保存为 WAV 文件（锁内零分配）</summary>
+    /// <param name="filePath">输出文件路径</param>
+    /// <param name="saveDurationSeconds">要保存的最近 N 秒音频；0 或负数表示全部</param>
+    public void SaveHistory(string filePath, int saveDurationSeconds = 0)
     {
         WaveFormat? format;
-        int validBytes;
+        int bytesToSave;
         byte[] saveBuffer;
 
-        // 第一步：在锁内将环形数据线性化拷贝到预分配的 _saveBuffer（只有 Array.Copy，零内存分配）
         lock (_bufferLock)
         {
             if (_circularBuffer == null || _saveBuffer == null || _totalBytesWritten == 0 || _recordingFormat == null)
@@ -139,30 +140,45 @@ class PianoRecorder : IDisposable
                 return;
             }
 
-            validBytes = (int)Math.Min(_totalBytesWritten, _bufferSize);
             format = _recordingFormat;
-            saveBuffer = _saveBuffer;  // 本地引用，防止 Stop() 并发置空
+            saveBuffer = _saveBuffer;
 
-            if (_totalBytesWritten <= _bufferSize)
+            int totalValid = (int)Math.Min(_totalBytesWritten, _bufferSize);
+
+            // 计算要保存的字节数
+            if (saveDurationSeconds > 0)
             {
-                // 尚未回绕：数据从位置 0 开始连续存放
-                Array.Copy(_circularBuffer, 0, saveBuffer, 0, validBytes);
+                int requestedBytes = saveDurationSeconds * format.AverageBytesPerSecond;
+                bytesToSave = Math.Min(requestedBytes, totalValid);
             }
             else
             {
-                // 已回绕：旧数据在 [_writePos .. 末尾)，新数据在 [0 .. _writePos)
-                int firstPart = _bufferSize - _writePos;
-                Array.Copy(_circularBuffer, _writePos, saveBuffer, 0, firstPart);
-                Array.Copy(_circularBuffer, 0, saveBuffer, firstPart, _writePos);
+                bytesToSave = totalValid; // 保存全部
+            }
+
+            if (_totalBytesWritten <= _bufferSize)
+            {
+                // 未回绕：数据从 0 到 totalValid-1 连续存放
+                int start = totalValid - bytesToSave;
+                Array.Copy(_circularBuffer, start, saveBuffer, 0, bytesToSave);
+            }
+            else
+            {
+                // 已回绕：最近 bytesToSave 字节的起始位置
+                int start = (_writePos - bytesToSave + _bufferSize) % _bufferSize;
+                int firstPart = Math.Min(bytesToSave, _bufferSize - start);
+                Array.Copy(_circularBuffer, start, saveBuffer, 0, firstPart);
+                if (firstPart < bytesToSave)
+                    Array.Copy(_circularBuffer, 0, saveBuffer, firstPart, bytesToSave - firstPart);
             }
         }
 
-        // 第二步：在锁外执行磁盘写入，使用本地引用的 saveBuffer，不受 Stop() 影响
+        // 第二步：在锁外执行磁盘写入
         try
         {
             using (var writer = new WaveFileWriter(filePath, format))
             {
-                writer.Write(saveBuffer, 0, validBytes);
+                writer.Write(saveBuffer, 0, bytesToSave);
             }
             Console.WriteLine(LocalizationService.Get("MsgSaveSuccess", filePath));
         }

@@ -7,6 +7,8 @@ All notable changes to PRecorder will be documented in this file.
 ### Added
 - Multi-language support (English / Chinese)
 - Language selection in Setup wizard and Settings panel
+- Separate save duration setting (independent from buffer length)
+- Save duration options: 1/2/3/5/10/15/30/60 minutes (capped at buffer length)
 
 ### Fixed
 - Self-contained single-file publish side-by-side configuration error (0x800736B1)
@@ -27,6 +29,8 @@ All notable changes to PRecorder will be documented in this file.
 - App icon (multiple resolutions)
 
 ### Changed
+- Save duration selector moved from Settings to MainWindow toolbar (dropdown next to Save button)
+- Dropdown options dynamically limited by buffer duration
 - Migrated from console app to WPF GUI
 - Switched from MSIX to Inno Setup packaging
 - Optimized icon assets (2.5 MB → 60 KB)

@@ -20,6 +20,7 @@ public partial class MainWindow : System.Windows.Window
     {
         RefreshDeviceList();
         SetWindowIcon();
+        PopulateSaveDuration();
         ApplyLanguage();
 
         _statusTimer = new DispatcherTimer
@@ -122,11 +123,32 @@ public partial class MainWindow : System.Windows.Window
 
     private void BtnSettings_Click(object sender, System.Windows.RoutedEventArgs e)
     {
-        var settingsWindow = new SettingsWindow
-        {
-            Owner = this
-        };
+        var settingsWindow = new SettingsWindow { Owner = this };
         settingsWindow.ShowDialog();
+        PopulateSaveDuration(); // 缓冲区时长可能变了，刷新下拉
+        ApplyLanguage();
+    }
+
+    /// <summary>根据缓冲区时长动态填充保存时长下拉框</summary>
+    private void PopulateSaveDuration()
+    {
+        int bufferMin = AppSettings.BufferDurationMinutes;
+        int current = AppSettings.SaveDurationMinutes;
+        if (current > bufferMin) { current = bufferMin; AppSettings.SaveDurationMinutes = bufferMin; }
+
+        cmbSaveDuration.Items.Clear();
+        foreach (int m in new[] { 1, 2, 3, 5, 10, 15, 30, 60 })
+        {
+            if (m > bufferMin) break;
+            cmbSaveDuration.Items.Add(new System.Windows.Controls.ComboBoxItem
+            {
+                Tag = m,
+                Content = m == 1 ? "1 min" : $"{m} min"
+            });
+            if (m == current) cmbSaveDuration.SelectedItem = cmbSaveDuration.Items[^1];
+        }
+        if (cmbSaveDuration.SelectedItem == null && cmbSaveDuration.Items.Count > 0)
+            cmbSaveDuration.SelectedIndex = cmbSaveDuration.Items.Count - 1;
     }
 
     // ==================== 录音控制 ====================
@@ -163,6 +185,7 @@ public partial class MainWindow : System.Windows.Window
             cmbDevice.IsEnabled = false;
             btnRefreshDevices.IsEnabled = false;
             btnSave.IsEnabled = true;
+            cmbSaveDuration.IsEnabled = true;
             SetStatus(L("StatusRecording"), System.Windows.Media.Brushes.Crimson);
         }
         else
@@ -176,6 +199,7 @@ public partial class MainWindow : System.Windows.Window
             cmbDevice.IsEnabled = true;
             btnRefreshDevices.IsEnabled = true;
             btnSave.IsEnabled = false;
+            cmbSaveDuration.IsEnabled = false;
             SetStatus(L("StatusStopped"), System.Windows.Media.Brushes.Gray);
             txtDuration.Text = L("DurationEmpty");
             txtBuffer.Text = L("BufferEmpty");
@@ -213,9 +237,17 @@ public partial class MainWindow : System.Windows.Window
         string fileName = $"PRecorder_{DateTime.Now:yyyyMMdd_HHmmss}.{ext}";
         string fullPath = System.IO.Path.Combine(savePath, fileName);
 
+        int saveSec = AppSettings.SaveDurationMinutes * 60;
+        var durItem = cmbSaveDuration.SelectedItem as System.Windows.Controls.ComboBoxItem;
+        if (durItem?.Tag != null && int.TryParse(durItem.Tag.ToString(), out int min))
+        {
+            saveSec = min * 60;
+            AppSettings.SaveDurationMinutes = min;
+        }
+
         if (ext == "wav")
         {
-            _recorder.SaveHistory(fullPath);
+            _recorder.SaveHistory(fullPath, saveSec);
         }
         else
         {
@@ -223,7 +255,7 @@ public partial class MainWindow : System.Windows.Window
                 System.IO.Path.GetTempPath(),
                 $"~prec_{Guid.NewGuid():N}.wav");
 
-            _recorder.SaveHistory(tempWav);
+            _recorder.SaveHistory(tempWav, saveSec);
 
             try
             {

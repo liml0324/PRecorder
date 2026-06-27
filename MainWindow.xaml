@@ -61,8 +61,11 @@
                     Width="110" Height="38" Margin="0,0,10,0"
                     FontSize="14" Click="BtnRecord_Click"/>
             <Button x:Name="btnSave" Content="💾  保存"
-                    Width="110" Height="38" Margin="0,0,10,0"
+                    Width="80" Height="38" Margin="0,0,6,0"
                     FontSize="14" Click="BtnSave_Click" IsEnabled="False"/>
+            <ComboBox x:Name="cmbSaveDuration" Width="70" Height="38"
+                      Margin="0,0,10,0" IsEnabled="False"
+                      VerticalContentAlignment="Center"/>
             <Button x:Name="btnSettings" Content="⚙  设置"
                     Width="90" Height="38" Margin="0,0,10,0"
                     FontSize="14" Click="BtnSettings_Click"/>
